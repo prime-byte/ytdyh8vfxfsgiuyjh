@@ -402,47 +402,48 @@ function proceedToNextQuestion() {
 }
 
 function showInterstitialAd() {
-    interstitialModal.classList.add('active');
+  interstitialModal.classList.add('active');
 
-    // Remove old ad script (if any)
-    const oldScript = document.getElementById('adsterra-script');
-    if (oldScript) oldScript.remove();
+  // Determine screen size
+  const isMobile = window.innerWidth <= 600;
+  const adSlotId = isMobile ? 'mobile-ad-slot' : 'desktop-ad-slot';
+  const adKey = isMobile ? 'ee4ce4e15c3690c11335665b3dcf5721' : 'd4a4c8bc54a0b3f7b99f147f1cf33b40';
+  const adWidth = isMobile ? 300 : 728;
+  const adHeight = isMobile ? 250 : 90;
 
-    // Create new script tag
-    const adScript = document.createElement('script');
-    adScript.type = 'text/javascript';
-    adScript.id = 'adsterra-script';
-    adScript.innerHTML = `
-        atOptions = {
-            'key' : 'a670a5a379fd5f08fe58ba90ee73bc7f',
-            'format' : 'iframe',
-            'height' : 300,
-            'width' : 160,
-            'params' : {}
-        };
-    `;
-    document.getElementById('adsterra-slot').innerHTML = '';
-    document.getElementById('adsterra-slot').appendChild(adScript);
+  // Clear both ad slots
+  document.getElementById('mobile-ad-slot').innerHTML = '';
+  document.getElementById('desktop-ad-slot').innerHTML = '';
+  document.getElementById('mobile-ad-slot').style.display = 'none';
+  document.getElementById('desktop-ad-slot').style.display = 'none';
 
-    // Load ad JS
-    const invokeScript = document.createElement('script');
-    invokeScript.src = "//www.highperformanceformat.com/a670a5a379fd5f08fe58ba90ee73bc7f/invoke.js";
-    document.getElementById('adsterra-slot').appendChild(invokeScript);
+  // Show the right slot
+  const targetSlot = document.getElementById(adSlotId);
+  targetSlot.style.display = 'block';
 
-    // Ad close timer
-    let interstitialTimeLeft = 5;
-    closeInterstitialBtn.disabled = true;
-    closeInterstitialBtn.classList.remove('enabled');
+  // Inject Adsterra script
+  const configScript = document.createElement('script');
+  configScript.type = 'text/javascript';
+  configScript.innerHTML = `
+    atOptions = {
+      'key': '${adKey}',
+      'format': 'iframe',
+      'height': ${adHeight},
+      'width': ${adWidth},
+      'params': {}
+    };
+  `;
+  targetSlot.appendChild(configScript);
 
-    clearInterval(gameState.interstitialTimer);
-    gameState.interstitialTimer = setInterval(() => {
-        interstitialTimeLeft--;
-        if (interstitialTimeLeft <= 0) {
-            clearInterval(gameState.interstitialTimer);
-            closeInterstitialBtn.disabled = false;
-            closeInterstitialBtn.classList.add('enabled');
-        }
-    }, 1000);
+  const adScript = document.createElement('script');
+  adScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+  targetSlot.appendChild(adScript);
+
+  // Delay close button
+  closeInterstitialBtn.disabled = true;
+  setTimeout(() => {
+    closeInterstitialBtn.disabled = false;
+  }, 5000);
 }
 
 function closeInterstitialAd() {
