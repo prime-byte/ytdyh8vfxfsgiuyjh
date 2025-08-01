@@ -403,16 +403,40 @@ function proceedToNextQuestion() {
 
 function showInterstitialAd() {
     interstitialModal.classList.add('active');
-    
-    // Start ad countdown (5 seconds)
+
+    // Remove old ad script (if any)
+    const oldScript = document.getElementById('adsterra-script');
+    if (oldScript) oldScript.remove();
+
+    // Create new script tag
+    const adScript = document.createElement('script');
+    adScript.type = 'text/javascript';
+    adScript.id = 'adsterra-script';
+    adScript.innerHTML = `
+        atOptions = {
+            'key' : 'a670a5a379fd5f08fe58ba90ee73bc7f',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+        };
+    `;
+    document.getElementById('adsterra-slot').innerHTML = '';
+    document.getElementById('adsterra-slot').appendChild(adScript);
+
+    // Load ad JS
+    const invokeScript = document.createElement('script');
+    invokeScript.src = "//www.highperformanceformat.com/a670a5a379fd5f08fe58ba90ee73bc7f/invoke.js";
+    document.getElementById('adsterra-slot').appendChild(invokeScript);
+
+    // Ad close timer
     let interstitialTimeLeft = 5;
     closeInterstitialBtn.disabled = true;
     closeInterstitialBtn.classList.remove('enabled');
-    
+
     clearInterval(gameState.interstitialTimer);
     gameState.interstitialTimer = setInterval(() => {
         interstitialTimeLeft--;
-        
         if (interstitialTimeLeft <= 0) {
             clearInterval(gameState.interstitialTimer);
             closeInterstitialBtn.disabled = false;
