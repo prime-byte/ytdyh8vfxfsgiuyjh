@@ -112,20 +112,19 @@
         </div>
 
         <!-- Interstitial Ad Modal -->
-      <div id="interstitial-modal" class="modal">
-    <div class="modal-content interstitial-content">
-        <h2>Advertisement</h2>
-        <div class="ad-container" style="display: flex; flex-direction: column; align-items: center;">
-            <!-- ADSTERAA BANNER CODE -->
-            <div id="adsterra-slot" style="width:160px;height:300px;">
-                <!-- This will be filled dynamically -->
-            </div>
+     <div id="interstitial-modal" class="interstitial-modal">
+  <div class="ad-container">
+    <!-- Desktop Ad -->
+    <div id="desktop-ad-slot" style="display: none;"></div>
 
-            <button id="close-interstitial-btn" class="close-ad-btn" disabled style="margin-top: 10px;">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
+    <!-- Mobile Ad -->
+    <div id="mobile-ad-slot" style="display: none;"></div>
+
+    <!-- Close Button -->
+    <button id="close-interstitial-btn" class="close-ad-btn" disabled>
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 </div>
          <!-- Results Screen -->
         <section id="results-screen" class="screen">
