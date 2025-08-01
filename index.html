@@ -112,31 +112,22 @@
         </div>
 
         <!-- Interstitial Ad Modal -->
-        <div id="interstitial-modal" class="modal">
-            <div class="modal-content interstitial-content">
-                <h2>Advertisement</h2>
-               <div class="ad-container" style="display: flex; flex-direction: column; align-items: center;">
-    <!-- Adsterra Ad Code -->
-    <script type="text/javascript">
-        atOptions = {
-            'key' : 'a670a5a379fd5f08fe58ba90ee73bc7f',
-            'format' : 'iframe',
-            'height' : 300,
-            'width' : 160,
-            'params' : {}
-        };
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/a670a5a379fd5f08fe58ba90ee73bc7f/invoke.js"></script>
-
-    <!-- Close Button -->
-    <button id="close-interstitial-btn" class="close-ad-btn" disabled style="margin-top: 10px;">
-        <i class="fas fa-times"></i>
-    </button>
-</div>
+      <div id="interstitial-modal" class="modal">
+    <div class="modal-content interstitial-content">
+        <h2>Advertisement</h2>
+        <div class="ad-container" style="display: flex; flex-direction: column; align-items: center;">
+            <!-- ADSTERAA BANNER CODE -->
+            <div id="adsterra-slot" style="width:160px;height:300px;">
+                <!-- This will be filled dynamically -->
             </div>
-        </div>
 
-        <!-- Results Screen -->
+            <button id="close-interstitial-btn" class="close-ad-btn" disabled style="margin-top: 10px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</div>
+         <!-- Results Screen -->
         <section id="results-screen" class="screen">
             <h2 class="animate__animated animate__fadeIn">Quiz Results</h2>
             <div class="results-grid">
