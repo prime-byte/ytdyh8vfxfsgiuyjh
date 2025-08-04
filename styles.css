@@ -464,12 +464,13 @@ h2 {
 /* Banner Ad Modal */
 .banner-ad-modal {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 300px;
     z-index: 9999;
     display: none;
-    animation: slideIn 0.3s ease-out;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .banner-ad-modal.active {
@@ -482,6 +483,7 @@ h2 {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    width: 100%;
 }
 
 #banner-ad-slot {
@@ -508,6 +510,7 @@ h2 {
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    z-index: 10000;
 }
 
 .close-banner-ad-btn:hover {
@@ -517,17 +520,6 @@ h2 {
 .close-banner-ad-btn:disabled {
     background: rgba(0, 0, 0, 0.3);
     cursor: not-allowed;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 /* Confirmation Modals */
@@ -669,7 +661,6 @@ footer {
 
     .banner-ad-modal {
         width: 250px;
-        right: 10px;
     }
 }
 
