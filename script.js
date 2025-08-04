@@ -1,4 +1,4 @@
-// Quiz Data - In a real app, this would come from a server
+// Quiz Data
 const quizQuestions = {
     easy: [
         {
@@ -129,7 +129,8 @@ const gameState = {
         extreme: { time: 10, colorThresholds: { green: 10, yellow: 3 } }
     },
     questionCount: 0,
-    interstitialTimer: null
+    adShown: false,
+    actionAfterAd: null
 };
 
 // DOM Elements
@@ -139,10 +140,16 @@ const resultsScreen = document.getElementById('results-screen');
 const difficultyCards = document.querySelectorAll('.difficulty-card');
 const instructionsModal = document.getElementById('instructions-modal');
 const feedbackModal = document.getElementById('feedback-modal');
-const interstitialModal = document.getElementById('interstitial-modal');
+const bannerAdModal = document.getElementById('banner-ad-modal');
+const exitConfirmModal = document.getElementById('exit-confirm-modal');
+const tryAgainConfirmModal = document.getElementById('tryagain-confirm-modal');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const nextQuestionBtn = document.getElementById('next-question-btn');
-const closeInterstitialBtn = document.getElementById('close-interstitial-btn');
+const closeBannerAdBtn = document.getElementById('close-banner-ad-btn');
+const confirmExitBtn = document.getElementById('confirm-exit-btn');
+const cancelExitBtn = document.getElementById('cancel-exit-btn');
+const confirmTryAgainBtn = document.getElementById('confirm-tryagain-btn');
+const cancelTryAgainBtn = document.getElementById('cancel-tryagain-btn');
 const tryAgainBtn = document.getElementById('try-again-btn');
 const backToHomeBtn = document.getElementById('back-to-home-btn');
 const exitQuizBtn = document.getElementById('exit-quiz-btn');
@@ -160,6 +167,7 @@ const resultText = document.getElementById('result-text');
 const correctAnswerText = document.getElementById('correct-answer-text');
 const modalDifficultyTitle = document.getElementById('modal-difficulty-title');
 const modalTimerValue = document.getElementById('modal-timer-value');
+const bannerAdSlot = document.getElementById('banner-ad-slot');
 
 // Audio Elements
 const correctSound = document.getElementById('correct-sound');
@@ -175,15 +183,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startQuizBtn.addEventListener('click', startQuiz);
     nextQuestionBtn.addEventListener('click', loadNextQuestion);
-    closeInterstitialBtn.addEventListener('click', closeInterstitialAd);
-    tryAgainBtn.addEventListener('click', tryAgain);
+    closeBannerAdBtn.addEventListener('click', closeBannerAd);
+    tryAgainBtn.addEventListener('click', () => handleActionWithAd('tryagain'));
     backToHomeBtn.addEventListener('click', backToHome);
-    exitQuizBtn.addEventListener('click', showResults);
+    exitQuizBtn.addEventListener('click', () => handleActionWithAd('exit'));
+    confirmExitBtn.addEventListener('click', showResults);
+    cancelExitBtn.addEventListener('click', () => exitConfirmModal.classList.remove('active'));
+    confirmTryAgainBtn.addEventListener('click', tryAgain);
+    cancelTryAgainBtn.addEventListener('click', () => tryAgainConfirmModal.classList.remove('active'));
 
     // Close buttons for modals
     document.querySelector('.close-btn').addEventListener('click', () => {
         instructionsModal.classList.remove('active');
     });
+
+    // Shuffle all questions initially
+    shuffleArray(quizQuestions.easy);
+    shuffleArray(quizQuestions.medium);
+    shuffleArray(quizQuestions.hard);
+    shuffleArray(quizQuestions.extreme);
 });
 
 // Game Functions
@@ -383,9 +401,10 @@ function showFeedback(result, correctAnswer) {
 function loadNextQuestion() {
     feedbackModal.classList.remove('active');
     
-    // Check if we should show interstitial ad (every 3 questions)
-    if (gameState.questionCount > 0 && gameState.questionCount % 3 === 0) {
-        showInterstitialAd();
+    // Show banner ad after every 3 questions
+    if (gameState.questionCount % 3 === 0) {
+        showBannerAd();
+        gameState.actionAfterAd = 'nextQuestion';
     } else {
         proceedToNextQuestion();
     }
@@ -401,64 +420,69 @@ function proceedToNextQuestion() {
     }
 }
 
-function showInterstitialAd() {
-  interstitialModal.classList.add('active');
+function showBannerAd() {
+    bannerAdModal.classList.add('active');
+    gameState.adShown = true;
 
-  // Determine screen size
-  const isMobile = window.innerWidth <= 600;
-  const adSlotId = isMobile ? 'mobile-ad-slot' : 'desktop-ad-slot';
-  const adKey = isMobile ? 'ee4ce4e15c3690c11335665b3dcf5721' : 'd4a4c8bc54a0b3f7b99f147f1cf33b40';
-  const adWidth = isMobile ? 300 : 728;
-  const adHeight = isMobile ? 250 : 90;
+    // Clear previous ad
+    bannerAdSlot.innerHTML = '';
 
-  // Clear both ad slots
-  document.getElementById('mobile-ad-slot').innerHTML = '';
-  document.getElementById('desktop-ad-slot').innerHTML = '';
-  document.getElementById('mobile-ad-slot').style.display = 'none';
-  document.getElementById('desktop-ad-slot').style.display = 'none';
+    // Inject Adsterra script
+    const configScript = document.createElement('script');
+    configScript.type = 'text/javascript';
+    configScript.innerHTML = `
+        atOptions = {
+            'key': 'ee4ce4e15c3690c11335665b3dcf5721',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+        };
+    `;
+    bannerAdSlot.appendChild(configScript);
 
-  // Show the right slot
-  const targetSlot = document.getElementById(adSlotId);
-  targetSlot.style.display = 'block';
+    const adScript = document.createElement('script');
+    adScript.src = `//www.highperformanceformat.com/ee4ce4e15c3690c11335665b3dcf5721/invoke.js`;
+    bannerAdSlot.appendChild(adScript);
 
-  // Inject Adsterra script
-  const configScript = document.createElement('script');
-  configScript.type = 'text/javascript';
-  configScript.innerHTML = `
-    atOptions = {
-      'key': '${adKey}',
-      'format': 'iframe',
-      'height': ${adHeight},
-      'width': ${adWidth},
-      'params': {}
-    };
-  `;
-  targetSlot.appendChild(configScript);
-
-  const adScript = document.createElement('script');
-  adScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
-  targetSlot.appendChild(adScript);
-
-  // Delay close button
-  closeInterstitialBtn.disabled = true;
-  setTimeout(() => {
-    closeInterstitialBtn.disabled = false;
-  }, 5000);
+    // Delay close button
+    closeBannerAdBtn.disabled = true;
+    setTimeout(() => {
+        closeBannerAdBtn.disabled = false;
+    }, 5000);
 }
 
-function closeInterstitialAd() {
-    interstitialModal.classList.remove('active');
-    proceedToNextQuestion();
+function closeBannerAd() {
+    bannerAdModal.classList.remove('active');
+    gameState.adShown = false;
+    
+    // Execute the action that was supposed to happen after the ad
+    if (gameState.actionAfterAd === 'nextQuestion') {
+        proceedToNextQuestion();
+    } else if (gameState.actionAfterAd === 'exit') {
+        exitConfirmModal.classList.add('active');
+    } else if (gameState.actionAfterAd === 'tryagain') {
+        tryAgainConfirmModal.classList.add('active');
+    }
+    
+    // Reset action
+    gameState.actionAfterAd = null;
+}
+
+function handleActionWithAd(action) {
+    // Show banner ad first
+    showBannerAd();
+    gameState.actionAfterAd = action;
 }
 
 function showResults() {
     // Clear any active timers
     clearInterval(gameState.timer);
-    clearInterval(gameState.interstitialTimer);
     
     // Hide quiz screen, show results screen
     quizScreen.classList.remove('active');
     resultsScreen.classList.add('active');
+    exitConfirmModal.classList.remove('active');
     
     // Update results display
     correctAnswersDisplay.textContent = gameState.score.correct;
@@ -486,6 +510,7 @@ function tryAgain() {
     // Go back to quiz screen
     resultsScreen.classList.remove('active');
     quizScreen.classList.add('active');
+    tryAgainConfirmModal.classList.remove('active');
     
     loadQuestion();
 }
@@ -533,9 +558,3 @@ function shuffleArray(array) {
     }
     return array;
 }
-
-// Initialize the game
-shuffleArray(quizQuestions.easy);
-shuffleArray(quizQuestions.medium);
-shuffleArray(quizQuestions.hard);
-shuffleArray(quizQuestions.extreme);
