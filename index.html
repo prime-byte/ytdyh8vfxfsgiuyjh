@@ -111,22 +111,41 @@
             </div>
         </div>
 
-        <!-- Interstitial Ad Modal -->
-     <div id="interstitial-modal" class="interstitial-modal">
-  <div class="ad-container">
-    <!-- Desktop Ad -->
-    <div id="desktop-ad-slot" style="display: none;"></div>
+        <!-- Banner Ad Modal -->
+        <div id="banner-ad-modal" class="banner-ad-modal">
+            <div class="banner-ad-content">
+                <div id="banner-ad-slot"></div>
+                <button id="close-banner-ad-btn" class="close-banner-ad-btn" disabled>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
 
-    <!-- Mobile Ad -->
-    <div id="mobile-ad-slot" style="display: none;"></div>
+        <!-- Exit Confirmation Modal -->
+        <div id="exit-confirm-modal" class="modal">
+            <div class="modal-content">
+                <h2>Exit Quiz?</h2>
+                <p>Are you sure you want to exit? Your progress will be lost.</p>
+                <div class="modal-buttons">
+                    <button id="confirm-exit-btn" class="btn exit-btn">Yes, Exit</button>
+                    <button id="cancel-exit-btn" class="btn">No, Continue</button>
+                </div>
+            </div>
+        </div>
 
-    <!-- Close Button -->
-    <button id="close-interstitial-btn" class="close-ad-btn" disabled>
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-</div>
-         <!-- Results Screen -->
+        <!-- Try Again Confirmation Modal -->
+        <div id="tryagain-confirm-modal" class="modal">
+            <div class="modal-content">
+                <h2>Restart Quiz?</h2>
+                <p>Are you sure you want to restart? Your current score will be reset.</p>
+                <div class="modal-buttons">
+                    <button id="confirm-tryagain-btn" class="btn">Yes, Restart</button>
+                    <button id="cancel-tryagain-btn" class="btn">No, Stay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
         <section id="results-screen" class="screen">
             <h2 class="animate__animated animate__fadeIn">Quiz Results</h2>
             <div class="results-grid">
