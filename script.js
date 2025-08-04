@@ -445,16 +445,29 @@ function showBannerAd() {
     adScript.src = `//www.highperformanceformat.com/ee4ce4e15c3690c11335665b3dcf5721/invoke.js`;
     bannerAdSlot.appendChild(adScript);
 
-    // Delay close button
+    // Update close button text with countdown
     closeBannerAdBtn.disabled = true;
-    setTimeout(() => {
-        closeBannerAdBtn.disabled = false;
-    }, 5000);
+    let secondsLeft = 10;
+    closeBannerAdBtn.innerHTML = `<i class="fas fa-times"></i> Close (${secondsLeft}s)`;
+    
+    const countdown = setInterval(() => {
+        secondsLeft--;
+        closeBannerAdBtn.innerHTML = `<i class="fas fa-times"></i> Close (${secondsLeft}s)`;
+        
+        if (secondsLeft <= 0) {
+            clearInterval(countdown);
+            closeBannerAdBtn.disabled = false;
+            closeBannerAdBtn.innerHTML = `<i class="fas fa-times"></i> Close`;
+        }
+    }, 1000);
 }
 
 function closeBannerAd() {
     bannerAdModal.classList.remove('active');
     gameState.adShown = false;
+    
+    // Clear the ad content
+    bannerAdSlot.innerHTML = '';
     
     // Execute the action that was supposed to happen after the ad
     if (gameState.actionAfterAd === 'nextQuestion') {
