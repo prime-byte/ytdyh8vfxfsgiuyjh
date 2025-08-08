@@ -1,192 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Master</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ad Banner Demo</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Quiz Master Logo" class="logo-img">
-            <h1>Quiz Master</h1>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Difficulty Selection Screen -->
-        <section id="difficulty-screen" class="screen active">
-            <h2 class="animate__animated animate__fadeIn">Choose Your Challenge</h2>
-            <div class="difficulty-grid">
-                <div class="difficulty-card animate__animated animate__fadeInUp" data-difficulty="easy">
-                    <div class="card-icon"><img src="https://via.placeholder.com/150x150/4CAF50/FFFFFF?text=EASY" alt="Easy"></div>
-                    <h3>Easy</h3>
-                    <p>30 seconds per question</p>
-                </div>
-                <div class="difficulty-card animate__animated animate__fadeInUp" data-difficulty="medium" style="animation-delay: 0.1s">
-                    <div class="card-icon"><img src="https://via.placeholder.com/150x150/FFC107/FFFFFF?text=MEDIUM" alt="Medium"></div>
-                    <h3>Medium</h3>
-                    <p>20 seconds per question</p>
-                </div>
-                <div class="difficulty-card animate__animated animate__fadeInUp" data-difficulty="hard" style="animation-delay: 0.2s">
-                    <div class="card-icon"><img src="https://via.placeholder.com/150x150/FF9800/FFFFFF?text=HARD" alt="Hard"></div>
-                    <h3>Hard</h3>
-                    <p>15 seconds per question</p>
-                </div>
-                <div class="difficulty-card animate__animated animate__fadeInUp" data-difficulty="extreme" style="animation-delay: 0.3s">
-                    <div class="card-icon"><img src="https://via.placeholder.com/150x150/F44336/FFFFFF?text=EXTREME" alt="Extreme"></div>
-                    <h3>Extreme</h3>
-                    <p>10 seconds per question</p>
-                </div>
-            </div>
-        </section>
+  <div class="quiz-container">
+    <h1>Question <span id="question-number">1</span></h1>
+    <button id="next-btn">Next Question</button>
+  </div>
 
-        <!-- Instructions Modal -->
-        <div id="instructions-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2 id="modal-difficulty-title">Instructions</h2>
-                <div class="instructions-content">
-                    <div class="instruction-item">
-                        <i class="fas fa-clock"></i>
-                        <p>You have <span id="modal-timer-value">30</span> seconds to answer each question.</p>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-lightbulb"></i>
-                        <p>Read each question carefully before answering.</p>
-                    </div>
-                </div>
-                <button id="start-quiz-btn" class="btn">Start Quiz</button>
-            </div>
-        </div>
+  <!-- Ad Popup -->
+  <div class="ad-popup" id="ad-popup">
+    <div class="ad-modal">
+      <h2>🎯 Click here to activate close button!!</h2>
+      <p>Otherwise wait for <span id="countdown">15</span> seconds to activate the close button.</p>
+      <button id="click-to-unlock">Click to Unlock</button>
+      <button id="close-ad" disabled>Close</button>
+    </div>
+  </div>
 
-        <!-- Quiz Screen -->
-        <section id="quiz-screen" class="screen">
-            <div class="quiz-container">
-                <div class="question-container animate__animated animate__fadeIn">
-                    <h2 id="question-text">Loading question...</h2>
-                </div>
-
-                <div class="timer-container animate__animated animate__fadeIn">
-                    <div class="timer-bar">
-                        <div class="timer-progress" id="timer-progress"></div>
-                    </div>
-                    <div class="timer-display">
-                        <span id="timer">30</span>s
-                    </div>
-                </div>
-
-                <div class="options-container animate__animated animate__fadeIn">
-                    <div class="option" data-option="1">Option 1</div>
-                    <div class="option" data-option="2">Option 2</div>
-                    <div class="option" data-option="3">Option 3</div>
-                    <div class="option" data-option="4">Option 4</div>
-                </div>
-
-                <div class="quiz-footer">
-                    <button id="exit-quiz-btn" class="btn exit-btn">
-                        <i class="fas fa-sign-out-alt"></i> Exit
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Answer Feedback Modal -->
-        <div id="feedback-modal" class="modal">
-            <div class="modal-content feedback-content">
-                <h2 id="feedback-title">Correct!</h2>
-                <div class="correct-answer-container">
-                    <p id="feedback-message">Your answer is <span id="result-text">correct</span>!</p>
-                    <div class="correct-answer">
-                        <i class="fas fa-check-circle"></i>
-                        <span id="correct-answer-text">Paris</span>
-                    </div>
-                </div>
-                <button id="next-question-btn" class="btn">Next Question</button>
-            </div>
-        </div>
-
-        <!-- Banner Ad Modal -->
-        <div id="banner-ad-modal" class="banner-ad-modal">
-            <div class="banner-ad-content">
-                <div id="banner-ad-slot"></div>
-                <button id="close-banner-ad-btn" class="close-banner-ad-btn" disabled>
-                    <i class="fas fa-times"></i> Close (10s)
-                </button>
-            </div>
-        </div>
-
-        <!-- Exit Confirmation Modal -->
-        <div id="exit-confirm-modal" class="modal">
-            <div class="modal-content">
-                <h2>Exit Quiz?</h2>
-                <p>Are you sure you want to exit? Your progress will be lost.</p>
-                <div class="modal-buttons">
-                    <button id="confirm-exit-btn" class="btn exit-btn">Yes, Exit</button>
-                    <button id="cancel-exit-btn" class="btn">No, Continue</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Try Again Confirmation Modal -->
-        <div id="tryagain-confirm-modal" class="modal">
-            <div class="modal-content">
-                <h2>Restart Quiz?</h2>
-                <p>Are you sure you want to restart? Your current score will be reset.</p>
-                <div class="modal-buttons">
-                    <button id="confirm-tryagain-btn" class="btn">Yes, Restart</button>
-                    <button id="cancel-tryagain-btn" class="btn">No, Stay</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Screen -->
-        <section id="results-screen" class="screen">
-            <h2 class="animate__animated animate__fadeIn">Quiz Results</h2>
-            <div class="results-grid">
-                <div class="result-card correct animate__animated animate__fadeInUp">
-                    <h3>✅ Correct</h3>
-                    <p id="correct-answers">0</p>
-                </div>
-                <div class="result-card incorrect animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
-                    <h3>❌ Incorrect</h3>
-                    <p id="incorrect-answers">0</p>
-                </div>
-                <div class="result-card timeout animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                    <h3>⏱ Time Up</h3>
-                    <p id="timeout-answers">0</p>
-                </div>
-                <div class="result-card attempted animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
-                    <h3>🔢 Attempted</h3>
-                    <p id="total-attempted">0</p>
-                </div>
-            </div>
-            <div class="result-buttons">
-                <button id="try-again-btn" class="btn">
-                    <i class="fas fa-redo"></i> Try Again
-                </button>
-                <button id="back-to-home-btn" class="btn">
-                    <i class="fas fa-home"></i> Back to Home
-                </button>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer Section -->
-    <footer>
-        <p>© 2023 Quiz Master. All rights reserved.</p>
-    </footer>
-
-    <!-- Audio Elements -->
-    <audio id="correct-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
-    <audio id="wrong-sound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
-    <audio id="timeup-sound" src="https://www.soundjay.com/buttons/sounds/beep-07.mp3" preload="auto"></audio>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
